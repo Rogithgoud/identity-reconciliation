@@ -1,18 +1,24 @@
+const identityService = require("../services/identityService");
+
 exports.identifyContact = async (req, res) => {
+
     try {
 
         const { email, phoneNumber } = req.body;
 
-        // temporary response
+        const contacts = await identityService.identifyContact(email, phoneNumber);
+
         res.status(200).json({
-            message: "Identify endpoint working",
-            email,
-            phoneNumber
+            contacts
         });
 
     } catch (error) {
+
+        console.error(error);
+
         res.status(500).json({
             error: "Internal Server Error"
         });
+
     }
 };
