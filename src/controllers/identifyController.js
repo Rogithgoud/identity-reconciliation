@@ -6,11 +6,9 @@ exports.identifyContact = async (req, res) => {
 
         const { email, phoneNumber } = req.body;
 
-        const contacts = await identityService.identifyContact(email, phoneNumber);
+        const result = await identityService.identifyContact(email, phoneNumber);
 
-        res.status(200).json({
-            contacts
-        });
+        res.status(200).json(result);
 
     } catch (error) {
 
