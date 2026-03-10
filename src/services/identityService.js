@@ -28,6 +28,34 @@ async function identifyContact(email, phoneNumber) {
 
         return buildResponse([newContact]);
     }
+    // find all primary contacts
+const primaryContacts = existingContacts.filter(
+    c => c.linkPrecedence === "primary"
+);
+
+// if more than one primary → merge them
+if (primaryContacts.length > 1) {
+
+    // oldest primary stays primary
+    primaryContacts.sort(
+        (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+    );
+
+    const mainPrimary = primaryContacts[0];
+
+    for (let i = 1; i < primaryContacts.length; i++) {
+
+        await prisma.contact.update({
+            where: { id: primaryContacts[i].id },
+            data: {
+                linkedId: mainPrimary.id,
+                linkPrecedence: "secondary"
+            }
+        });
+
+    }
+
+}
 
     //Find primary contact
     let primaryContact = existingContacts.find(
